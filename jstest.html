@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<title>JCEF帮助文档</title>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<a href="javascript:testToJava()">测试与java代码交互</a>
+</body>
+<script>
+function testToJava(){
+	window.java({
+	    request: '发送给JAVA的数据',
+	    persistent:false,
+	    onSuccess: function(response) {
+	      alert("返回的数据:"+response);
+	    },
+	    onFailure: function(error_code, error_message) {}
+	});
+}
+</script>
+<!-- author:玄翼猫 -->
+</html>
