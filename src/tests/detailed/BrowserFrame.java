@@ -4,17 +4,18 @@
 
 package tests.detailed;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import org.cef.CefApp;
 import org.cef.browser.CefBrowser;
 import org.cef.handler.CefLifeSpanHandlerAdapter;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
 public class BrowserFrame extends JFrame {
-    private boolean isClosed_ = false;
+    private volatile boolean isClosed_ = false;
     private CefBrowser browser_ = null;
     private static int browserCount_ = 0;
     private Runnable afterParentChangedAction_ = null;

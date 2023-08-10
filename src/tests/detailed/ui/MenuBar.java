@@ -19,6 +19,8 @@ import org.cef.network.CefRequest;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,15 +28,21 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -52,7 +60,7 @@ import tests.detailed.dialog.DownloadDialog;
 import tests.detailed.dialog.SearchDialog;
 import tests.detailed.dialog.ShowTextDialog;
 import tests.detailed.dialog.UrlRequestDialog;
-import tests.detailed.dialog.WebPluginManagerDialog;
+import tests.detailed.util.DataUri;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -70,7 +78,7 @@ public class MenuBar extends JMenuBar {
         }
     }
 
-    private final BrowserFrame owner_;
+    private final MainFrame owner_;
     private final CefBrowser browser_;
     private String last_selected_file_ = "";
     private final JMenu bookmarkMenu_;
@@ -79,7 +87,7 @@ public class MenuBar extends JMenuBar {
     private final CefCookieManager cookieManager_;
     private boolean reparentPending_ = false;
 
-    public MenuBar(BrowserFrame owner, CefBrowser browser, ControlPanel control_pane,
+    public MenuBar(MainFrame owner, CefBrowser browser, ControlPanel control_pane,
             DownloadDialog downloadDialog, CefCookieManager cookieManager) {
         owner_ = owner;
         browser_ = browser;
@@ -113,8 +121,7 @@ public class MenuBar extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
                 CefRunFileDialogCallback callback = new CefRunFileDialogCallback() {
                     @Override
-                    public void onFileDialogDismissed(
-                            int selectedAcceptFilter, Vector<String> filePaths) {
+                    public void onFileDialogDismissed(Vector<String> filePaths) {
                         if (!filePaths.isEmpty()) {
                             try {
                                 SaveAs saveContent = new SaveAs(filePaths.get(0));
@@ -150,10 +157,10 @@ public class MenuBar extends JMenuBar {
                 File selectedFile = fc.getSelectedFile();
                 if (selectedFile != null) {
                     CefPdfPrintSettings pdfSettings = new CefPdfPrintSettings();
-                    pdfSettings.header_footer_enabled = true;
-                    // A4 page size
-                    pdfSettings.page_width = 210000;
-                    pdfSettings.page_height = 297000;
+                    pdfSettings.display_header_footer = true;
+                    // letter page size
+                    pdfSettings.paper_width = 8.5;
+                    pdfSettings.paper_height = 11;
                     browser.printToPDF(
                             selectedFile.getAbsolutePath(), pdfSettings, new CefPdfPrintCallback() {
                                 @Override
@@ -242,17 +249,6 @@ public class MenuBar extends JMenuBar {
         });
         fileMenu.add(showCookies);
 
-        JMenuItem showPlugins = new JMenuItem("Show Plugins");
-        showPlugins.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                WebPluginManagerDialog pluginManager =
-                        new WebPluginManagerDialog(owner_, "Plugin Manager");
-                pluginManager.setVisible(true);
-            }
-        });
-        fileMenu.add(showPlugins);
-
         fileMenu.addSeparator();
 
         JMenuItem exitItem = new JMenuItem("Exit");
@@ -300,8 +296,8 @@ public class MenuBar extends JMenuBar {
         testShowText.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                browser_.loadString("<html><body><h1>Hello World</h1></body></html>",
-                        control_pane_.getAddress());
+                browser_.loadURL(DataUri.create(
+                        "text/html", "<html><body><h1>Hello World</h1></body></html>"));
             }
         });
         testMenu.add(testShowText);
@@ -327,7 +323,7 @@ public class MenuBar extends JMenuBar {
                 form += "<p>See implementation of <u>tests.RequestHandler.onBeforeResourceLoad(CefBrowser, CefRequest)</u> for details</p>";
                 form += "</form>";
                 form += "</body></html>";
-                browser_.loadString(form, control_pane_.getAddress());
+                browser_.loadURL(DataUri.create("text/html", form));
             }
         });
         testMenu.add(showForm);
@@ -452,6 +448,63 @@ public class MenuBar extends JMenuBar {
         });
         testMenu.add(newwindow);
 
+        JMenuItem screenshotSync = new JMenuItem("Screenshot (on AWT thread, native res)");
+        screenshotSync.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long start = System.nanoTime();
+                CompletableFuture<BufferedImage> shot = browser.createScreenshot(true);
+                System.out.println("Took screenshot from the AWT event thread in "
+                        + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " msecs");
+                try {
+                    displayScreenshot(shot.get());
+                } catch (InterruptedException | ExecutionException exc) {
+                    // cannot happen, future is already resolved in this case
+                }
+            }
+        });
+        screenshotSync.setEnabled(owner.isOsrEnabled());
+        testMenu.add(screenshotSync);
+
+        JMenuItem screenshotSyncScaled = new JMenuItem("Screenshot (on AWT thread, scaled)");
+        screenshotSyncScaled.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long start = System.nanoTime();
+                CompletableFuture<BufferedImage> shot = browser.createScreenshot(false);
+                System.out.println("Took screenshot from the AWT event thread in "
+                        + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " msecs");
+                try {
+                    displayScreenshot(shot.get());
+                } catch (InterruptedException | ExecutionException exc) {
+                    // cannot happen, future is already resolved in this case
+                }
+            }
+        });
+        screenshotSyncScaled.setEnabled(owner.isOsrEnabled());
+        testMenu.add(screenshotSyncScaled);
+
+        JMenuItem screenshotAsync = new JMenuItem("Screenshot (from other thread, scaled)");
+        screenshotAsync.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long start = System.nanoTime();
+                CompletableFuture<BufferedImage> shot = browser.createScreenshot(false);
+                shot.thenAccept((image) -> {
+                    System.out.println("Took screenshot asynchronously in "
+                            + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) + " msecs");
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            displayScreenshot(image);
+                        }
+                    });
+                });
+            }
+        });
+        screenshotAsync.setEnabled(owner.isOsrEnabled());
+        testMenu.add(screenshotAsync);
+
         add(fileMenu);
         add(bookmarkMenu_);
         add(testMenu);
@@ -482,6 +535,18 @@ public class MenuBar extends JMenuBar {
         });
         bookmarkMenu_.add(menuItem);
         validate();
+    }
+
+    private void displayScreenshot(BufferedImage aScreenshot) {
+        JFrame frame = new JFrame("Screenshot");
+        ImageIcon image = new ImageIcon();
+        image.setImage(aScreenshot);
+        frame.setLayout(new FlowLayout());
+        JLabel label = new JLabel(image);
+        label.setPreferredSize(new Dimension(aScreenshot.getWidth(), aScreenshot.getHeight()));
+        frame.add(label);
+        frame.setVisible(true);
+        frame.pack();
     }
 
     public void addBookmarkSeparator() {
