@@ -39,6 +39,11 @@ public class MouseMenuTestFrame extends JFrame{
 	private static final long serialVersionUID = 5944953587408136931L;
 
 	public static void main(String[] args) {
+		//必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
+        if (!CefApp.startup(args)) {
+            System.out.println("Startup initialization failed!");
+            return;
+        }
 		String url=System.getProperty("user.dir")+"/jstest.html";
 		new MouseMenuTestFrame(url);
 	}

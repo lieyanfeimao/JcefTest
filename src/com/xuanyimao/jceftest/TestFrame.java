@@ -32,6 +32,11 @@ public class TestFrame extends JFrame{
 	private static final long serialVersionUID = -7410082787754606408L;
 
 	public static void main(String[] args) {
+		//必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
+        if (!CefApp.startup(args)) {
+            System.out.println("Startup initialization failed!");
+            return;
+        }
 		new TestFrame();
 	}
 	

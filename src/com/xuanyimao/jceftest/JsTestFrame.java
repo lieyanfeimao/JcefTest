@@ -37,6 +37,11 @@ public class JsTestFrame extends JFrame{
 	private static final long serialVersionUID = -9131822589633996915L;
 
 	public static void main(String[] args) {
+		//必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
+        if (!CefApp.startup(args)) {
+            System.out.println("Startup initialization failed!");
+            return;
+        }
 		String url=System.getProperty("user.dir")+"/jstest.html";
 		new JsTestFrame(url);
 	}
@@ -118,7 +123,7 @@ public class JsTestFrame extends JFrame{
 					CefQueryCallback callback) {
 				System.out.println("request:"+request+"\nquery_id:"+query_id+"\npersistent:"+persistent);
 				
-				callback.success("Java后台处理了数据");
+				callback.success("Java后台处理了数据!请观察控制台打印信息以测试!");
 				return true;
 			}
 		}, true);

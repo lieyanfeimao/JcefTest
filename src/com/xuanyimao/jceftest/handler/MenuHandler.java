@@ -20,9 +20,11 @@ import org.cef.handler.CefContextMenuHandlerAdapter;
  */
 public class MenuHandler extends CefContextMenuHandlerAdapter{
 	
-	private final static int MENU_ID_INJECTION=10000;
+	/********** 自定义的菜单id尽量在26500~26600之间  **********/
 	
-	private final static int MENU_ID_ADDTEXT=10001;
+	private final static int MENU_ID_INJECTION=26501;
+	
+	private final static int MENU_ID_ADDTEXT=26502;
 	
 	@Override
 	public void onBeforeContextMenu(CefBrowser browser, CefFrame frame, CefContextMenuParams params, CefMenuModel model) {

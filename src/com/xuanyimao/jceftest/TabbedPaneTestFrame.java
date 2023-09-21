@@ -201,6 +201,11 @@ public class TabbedPaneTestFrame extends JFrame{
 	
 	
 	public static void main(String[] args) {
+		//必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
+        if (!CefApp.startup(args)) {
+            System.out.println("Startup initialization failed!");
+            return;
+        }
 		new TabbedPaneTestFrame("http://www.baidu.com");
 	}
 }
