@@ -50,7 +50,20 @@ maven建议用最新版本(3.8.5以上)
 注意：如果你的高版本jdk没配置在环境变量中，请修改  打包exe.bat 中的 jpackage 为你高版本jdk中的绝对路径。  
 比如我环境变量配置的是jdk1.8，我开发使用的是jdk17，我的jdk17安装在C:\git\jdk-17.0.13+11  
 那么我打包的指令是：  
-C:\git\jdk-17.0.13+11\bin\jpackage -i bin -n jcef-test --install-dir "jcef-test" --icon logo.ico --java-options "-Djava.library.path=.\app\win64" --app-version 1.0.3 --win-shortcut --win-menu --win-dir-chooser --main-jar jcef-test.jar  
+C:\git\jdk-17.0.13+11\bin\jpackage -i bin -n jcef-test --install-dir "jcef-test" --icon logo.ico --java-options "-Djava.library.path=.\app\win64" --app-version 1.0.0 --win-shortcut --win-menu --win-dir-chooser --main-jar jcef-test.jar  
+
+> *参数描述*
+>> -i：jpackage会将此目录下的所有文件打入安装包，示例中使用的是 bin 目录，安装后的路径为 安装目录\app\bin目录下的所有文件。我们可以将二进制文件和jar包都放到统一的目录中  
+>> -n：软件包名  
+>> --install-dir：安装目录名  
+>> --icon：软件安装后的图标。windows下需使用ico文件  
+>> --java-options：添加一个java启动参数，可以使用多个。示例中我们配置了java.library.path指向jcef的二进制文件目录  
+>> --app-version：版本号。每次打包新版本需要变动，否则可能会无法安装。如果不变动版本，你需要卸载原来的版本。  
+>> --main-jar：包含入口类的jar文件。这个文件要放在 -i 指定的目录中。  
+
+> 安装后，可以到安装目录下查看文件结构。在app目录下，有个以cfg后缀结尾的文件，这是启动的参数，你可以看到，--java-options配置项出现在了这个文件中  
+
+
 
 每次打包时，请修改版本号(--app-version)，否则会无法安装。如果不想修改版本号，请先手动卸载已安装的版本再进行安装  
 ![](view/static/images/8.png)  
