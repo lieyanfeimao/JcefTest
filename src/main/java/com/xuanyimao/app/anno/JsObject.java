@@ -3,7 +3,7 @@ package com.xuanyimao.app.anno;
 import java.lang.annotation.*;
 
 /**
- * @Description:自动注入扫描器的对象
+ * 自动注入的@JsClass标记的对象
  * @author liuming
  */
 @Documented

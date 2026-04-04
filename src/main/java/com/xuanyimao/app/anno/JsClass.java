@@ -3,8 +3,10 @@ package com.xuanyimao.app.anno;
 import java.lang.annotation.*;
 
 /**
- * javascript类注解，程序启动时扫描器会扫描指定包下的包含JsClass注解的类
- * jsname为前端公共JS函数调用java方法时的前缀名  如@JsClass(prefix="Test")，JS调用方式为window.java({request:"Test.xx"});
+ * javascript类注解，程序启动时扫描器会扫描指定包下的包含JsClass注解的类<br>
+ * name 主要用于@JsObject注入对象<br>
+ * prefix用于前端JS函数调用java方法时使用的前缀名，如@JsClass(prefix="Test")，JS调用方式为window.java({request:"Test.xx"});。<br>
+ * 当prefix值未配置时，使用name的值。一般情况下，配置了name的值即可。
  * @author liuming
  */
 @Documented
