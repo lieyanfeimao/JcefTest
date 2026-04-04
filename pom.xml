@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.xuanyimao.jceftest</groupId>
+    <artifactId>jceftest</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <jcefmaven.version>143.0.14</jcefmaven.version>
+        <zip4j.version>2.11.5</zip4j.version>
+        <spring-core.version>4.1.0.RELEASE</spring-core.version>
+
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback-classic.version>1.2.13</logback-classic.version>
+        <gson.version>2.8.9</gson.version>
+        <commons-lang3.version>3.17.0</commons-lang3.version>
+        <commons-io.version>2.21.0</commons-io.version>
+        <okhttp.version>4.9.0</okhttp.version>
+        <reflections.version>0.9.11</reflections.version>
+
+        <thumbnailator.version>0.4.21</thumbnailator.version>
+    </properties>
+
+    <dependencies>
+        <!-- jcef jar包 -->
+        <dependency>
+            <groupId>me.friwi</groupId>
+            <artifactId>jcefmaven</artifactId>
+            <version>${jcefmaven.version}</version>
+        </dependency>
+
+        <!-- 这些包在com.xuanyimao.app下用到 -->
+
+        <!-- 用于反射获取方法变量名 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring-core.version}</version>
+        </dependency>
+
+        <!-- 用于文件压缩和解压 -->
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>${zip4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- okhttp3 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
+        </dependency>
+
+        <!--log-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback-classic.version}</version>
+        </dependency>
+
+        <!-- 注解扫描 -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+
+        <!-- 缩略图 -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>jcef-test</finalName>
+        <plugins>
+        	<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.1</version>
+                <!-- 编译时保留参数名 -->
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+<!--                            &lt;!&ndash;指向要运行的Main类&ndash;&gt;-->
+                            <mainClass>com.xuanyimao.app.StartupApp</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>
+                        bin/
+                    </outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>
+                        bin/
+                    </outputDirectory>
+<!--                    <overWriteReleases>false</overWriteReleases>-->
+<!--                    <overWriteSnapshots>false</overWriteSnapshots>-->
+<!--                    &lt;!&ndash; 覆盖已存在的文件 &ndash;&gt;-->
+<!--                    <overWriteIfNewer>true</overWriteIfNewer>-->
+<!--                    &lt;!&ndash; 包含编译和运行时的所有依赖 &ndash;&gt;-->
+<!--                    <includeScope>runtime</includeScope>-->
+<!--                    显式复制子模块 依赖JAR文件会去除版本号-->
+                    <stripVersion>true</stripVersion>
+                </configuration>
+            </plugin>
+        
+        <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.8.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>
+                                        com.xuanyimao.app.StartupApp
+                                    </mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <outputDirectory>bin</outputDirectory>
+                             如果不希望文件名中包含 assemblyId，可以设置为false
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+			-->
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>view</directory>
+                <targetPath>view</targetPath>
+                <filtering>false</filtering>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+
+        </resources>
+        <!-- 分离打包 自动化 end -->
+    </build>
+</project>
