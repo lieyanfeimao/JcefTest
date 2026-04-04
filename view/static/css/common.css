@@ -1,0 +1,55 @@
+/* 整个滚动条 */
+::-webkit-scrollbar {
+	width: 5px; /* 滚动条宽度 */
+	height: 5px; /* 滚动条高度 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+	background: #f1f1f1; /* 轨道颜色 */
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+	background: rgba(136,136,136,0.5); /* 滑块颜色 */
+	border-radius: 5px; /* 滑块圆角 */
+}
+
+/* 滑块悬停 */
+::-webkit-scrollbar-thumb:hover {
+	background: #555; /* 滑块悬停颜色 */
+}
+
+
+.layui-card {
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .5);
+}
+.layui-card-header {
+	border-bottom: 1px solid #e3e3e3;
+}
+.layui-table-tool {
+	min-height: initial;
+}
+.layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-mend, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row]
+{
+	border-color:#e3e3e3;
+}
+
+.layui-form {
+	margin: 10px;
+}
+.layui-menu-body-title {
+	font-size: 12px;
+	margin: -5px 0px;
+	padding: 1px;
+}
+
+.layui-card-header {
+	font-size: 12px;
+	font-weight: bold;
+}
+.layui-card-body {
+	height: 300px;
+	max-height: 300px;
+	overflow-y: auto;
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration >
+    <!-- 关闭启动时打印的一堆日志 -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <property name="LOG_HOME" value="./" />
+    <property name="LOG_NAME" value="my-tools" />
+    
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${LOG_NAME}|%d{yyyy-MM-dd HH:mm:ss.SSS Z}|%X{traceId}|%t|%c|%p|%m%n</pattern>
+        </layout>
+    </appender>
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 之前的  rollingPolicy和triggeringPolicy冲突了  用一个新的标签  结合两者 -->
+            <!--  日志文件输出的文件名 -->
+            <FileNamePattern>${LOG_HOME}/logs/${LOG_NAME}-%d{yyyy-MM-dd}_%i.log</FileNamePattern>
+            <!-- 日志文件保留天数 -->
+            <MaxHistory>30</MaxHistory>
+            <!-- 日志文件最大尺寸 -->
+            <maxFileSize>100MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>
+                ${LOG_NAME}|%d{yyyy-MM-dd HH:mm:ss.SSS Z}|%X{traceId}|%t|%c|%p|%m%n
+            </pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!--配置异步日志-->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+        <!-- 获取调用者的数据相对来说比较消耗性能。为了提高性能，默认情况下不需要获取调用者的信息，也尽量不要开启。 -->
+        <!-- <includeCallerData>true</includeCallerData> -->
+    </appender>
+
+	<root level="INFO">
+        <appender-ref ref="ASYNC"/>
+
+        <appender-ref ref="STDOUT"/>
+
+    </root>
+	
+	
+</configuration>
