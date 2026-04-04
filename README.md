@@ -1,4 +1,7 @@
 ## JcefTest
+> 本工程包含 JAVA与JS交互，鼠标右键菜单，以Tab形式展示浏览器、png转ico、图片缩放。在jdk14以上版本，可以使用 打包exe.bat 生成exe安装包  
+> 个人修正的JCEF的API文档(中英文双语):  https://pan.baidu.com/s/18eioiDbIPM5aDdyn0TatVA  提取码: aptd  
+> 
 ### 软件包说明  
 com.xuanyimao.jceftest：包含JAVA与JS交互，鼠标右键菜单，以Tab形式展示浏览器的demo  
 com.xuanyimao.app：这是一个demo，用于测试将项目打包为exe(包含 png转ico 和 图片缩放 两个功能)  
@@ -12,11 +15,12 @@ maven建议用最新版本(3.8.5以上)
 
 ## 更新内容
 1、工程修改为maven工程  
-2、增加windows下的打包为exe的命令(需使用jdk14以上版本)  
+2、增加windows下的打包为exe的批处理文件(需使用jdk14以上版本)  
 
 ## 工程导入
 > 因为git无法上传大文件，所以jcef的二进制文件打成了压缩包，位于bin\win64下，先到此目录解压二进制文件  
-> 解压后，jcef.dll的路径应当为 bin\win64\jcef.dll
+> 解压后，jcef.dll的路径应当为 bin\win64\jcef.dll  
+> ![](view/static/images/10.png)  
 ### eclipse
 注意：如果你要使用高版本的jdk，建议使用最新版本的eclipse  
 1、以maven工程方式导入本项目  
@@ -33,7 +37,7 @@ maven建议用最新版本(3.8.5以上)
 3、随便选择一个测试类运行  
 
 ## 打包jar 和 exe
-1、运行maven的clean和install(牛逼点就敲mvn命令)，eclipse在右键菜单，idea通常在右上角，以此点一下就行。如果报错，大概率是maven本地仓库的jar包没下载好，可以去maven仓库确认一下  
+1、运行maven的clean和install(牛逼点就敲mvn命令)，eclipse在右键菜单，idea通常在右上角，依次点一下就行。如果报错，大概率是maven本地仓库的jar包没下载好，可以去maven仓库确认一下  
 ### eclipse  
 在项目上右键  
 ![](view/static/images/7.png)  
