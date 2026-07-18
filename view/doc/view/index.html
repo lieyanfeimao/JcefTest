@@ -1,0 +1,285 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>首页</title>
+
+	<link rel="stylesheet" type="text/css" href="static/libs/layui2/css/layui.css">
+	<link rel="stylesheet" type="text/css" href="static/css/common.css">
+	<style>
+		body {
+			padding: 10px;
+			line-height: 1.6;
+			color: rgba(0, 0, 0, .85);
+			font-size: 14px;
+			font-family: -apple-system, Roboto, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+		}
+
+		.row-title{
+			text-align: right;
+			font-weight: bold;
+		}
+		.layui-input {
+			height: 24px;
+			border-color: #e3e3e3;
+		}
+
+		.layui-card-header {
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.layui-card-body {
+			height: 300px;
+			max-height: 300px;
+			overflow-y: auto;
+		}
+		.layui-form-checkbox {
+			font-size: 10pt;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+<fieldset>
+	<legend class="admin-search-title"><b>png 转 ico</b></legend>
+	<div style="margin: 10px;font-size: 12px;">
+		<div class="layui-row layui-col-space5">
+			<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 row-title">
+				选择的文件：
+			</div>
+			<div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+				<img src="" alt="文件" style="width: 40px;height: 40px;" id="filePathImg"/>
+				<input type="hidden" id="filePath"/>
+				<button class="layui-btn layui-btn-xs" onclick="selectFile();">点击选择文件</button>
+				<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="convertImg();">转换为ico文件</button>
+			</div>
+		</div>
+
+
+<!--		<div class="layui-row layui-col-space5">-->
+<!--			<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 row-title">-->
+<!--				目录路径：-->
+<!--			</div>-->
+<!--			<div class="layui-col-xs11 layui-col-sm11 layui-col-md11">-->
+<!--				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">-->
+<!--					<input class="layui-input" type="text" name="folderPath" id="folderPath" value="C:\"/>-->
+<!--				</div>-->
+<!--				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">-->
+<!--					<button class="layui-btn layui-btn-primary layui-btn-xs" style="margin-left:5px;" onclick="openFolder();">在windows资源管理器中打开</button>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+	</div>
+</fieldset>
+<hr>
+<hr>
+	<fieldset>
+		<legend class="admin-search-title"><b>**********图片缩放 ( 缩放目录下所有图片 [bmp,jpg,jpeg,png] 文件 ) *************</b></legend>
+
+		<div style="margin: 10px;font-size: 12px;">
+			<div class="layui-row layui-col-space5">
+				<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 row-title">
+					选择目录：
+				</div>
+				<div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+					<span id="folderView" style="color:green;"></span>&nbsp;&nbsp;
+
+					<button class="layui-btn layui-btn-xs" onclick="selectFolder();">点击选择目录</button>
+				</div>
+			</div>
+
+			<form class="layui-form edit-form" lay-filter="myForm">
+				<input type="hidden" id="folder" name="folder"/>
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+						<div class="layui-card">
+							<div class="layui-card-header">
+								待缩放的图片文件
+							</div>
+							<div class="layui-card-body" id="selFileList">
+
+							</div>
+						</div>
+					</div>
+
+					<div id="fileInfo" class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align: right;">
+						共有0个图片文件
+					</div>
+				</div>
+
+				<div class="layui-row layui-form layui-col-space5">
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<input type="checkbox" title="等比例缩放" checked name="keepAspectRatio" lay-filter="keepAspectRatio" value="true">
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<div class="layui-col-xs5 layui-col-sm5 layui-col-md5 row-title">
+							<span id="widthDesc">最大宽度</span>(缩放后)：
+						</div>
+						<div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+							<input class="layui-input" type="text" name="width" id="width" value="720" />
+						</div>
+					</div>
+
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<div class="layui-col-xs5 layui-col-sm5 layui-col-md5 row-title">
+							<span id="heightDesc">最大高度</span>(缩放后)：
+						</div>
+						<div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+							<input class="layui-input" type="text" name="height" name="height" />
+						</div>
+					</div>
+				</div>
+
+				<div class="layui-row layui-form layui-col-space5">
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<input type="checkbox" title="覆盖原图" name="cover" value="true">
+					</div>
+
+				</div>
+
+				<div class="layui-row layui-form layui-col-space5">
+					<div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+						<button class="layui-btn layui-btn-sm" lay-submit lay-filter="edit">缩放图片</button>
+					</div>
+				</div>
+
+			</form>
+		</div>
+
+	</fieldset>
+
+</body>
+</html>
+<script type="text/javascript" src="static/libs/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="static/libs/layui2/layui.js"></script>
+<script type="text/javascript" src="static/js/common.js"></script>
+
+<script type="text/javascript" src="static/api/commonApi.js"></script>
+<script type="text/javascript" src="static/api/thumbnailApi.js"></script>
+<script type="text/javascript" src="static/api/imageToIcoApi.js"></script>
+
+<script>
+	var form;
+
+	$(document).ready(function(){
+		layui.use('form', function(){
+			form = layui.form;
+
+			form.on("checkbox(keepAspectRatio)",function(data){
+				if(!data.elem.checked){
+					$("#heightDesc").html("高度");
+					$("#widthDesc").html("宽度");
+				}else{
+					$("#heightDesc").html("最大高度");
+					$("#widthDesc").html("最大宽度");
+				}
+			});
+			//按钮事件
+			form.on('submit(edit)', function(data){
+				let params=form.val('myForm');
+				if(params.folder==""){
+					layer.msg("你如果不给我一个要处理的目录，我很难办！难办！那就不要办了！");
+					return false;
+				}
+
+				if(params.width=="" && params.height==""){
+					layer.msg("请设置缩放后图片的宽高");
+					return false;
+				}
+
+				if(params["cover"]!="true"){
+					commonApi.fileDialog(3,"选择存储目录")
+							.then(function (r){
+								if(r.length>0){
+									params["saveFolder"]=r[0];
+									createImage(params);
+								}
+							});
+				}else{
+					createImage(params);
+				}
+				// log(params);
+				return false;
+			});
+		});
+	});
+
+	function createImage(params){
+		showLoading();
+		thumbnailApi.create(params["folder"],params["saveFolder"],params["keepAspectRatio"],params["width"]==""?null:params["width"],params["height"]==""?null:params["height"])
+				.then(function (r){
+					layer.msg(r.msg);
+					if(r.ok){
+						commonApi.openExplorer(params["saveFolder"]?params["saveFolder"]:params["folder"]+"\\");
+					}
+				});
+	}
+
+	async function selectFile(){
+		//选择多个文件
+		let data= await commonApi.fileDialog(0,"选择图片文件",null,["image/*"]);
+		if(data.length>0){
+			$("#filePath").val(data[0]);
+			$("#filePathImg").attr("src",data[0]);
+		}
+	}
+
+	async function convertImg(){
+		let path=$("#filePath").val();
+		if(path==""){
+			layer.msg("算我求你了，先选择一张图片吧");
+			return;
+		}
+
+		//弹出另存为
+		let data=await commonApi.fileDialog(2,"保存ico文件",path+".ico");
+		if(data.length>0){
+			let r=await imageToIcoApi.convert(path,data[0]);
+			layer.msg(r.msg);
+			if(r.ok){
+				commonApi.openExplorer(data[0]);
+			}
+		}else{
+			layer.msg("取消处理");
+		}
+
+	}
+
+	// function openFolder(){
+	// 	let folder=$("#folderPath").val();
+	// 	if(folder==""){
+	// 		layer.msg("请填写一个文件夹的路径");
+	// 		return;
+	// 	}
+	// 	commonApi.openExplorer(folder);
+	// }
+
+	async function selectFolder(){
+		//选择目录
+		let data= await commonApi.fileDialog(3,"选择目录");
+
+		if(data.length>0){
+			let folder=data[0];
+			$("#folderView").html(folder);
+			$("#folder").val(folder);
+
+			showLoading();
+			let r=await thumbnailApi.queryAllFile(folder);
+			if(r.ok) {
+				let data = r.data;
+				if (data != null) {
+					let str="";
+					for (let i=0;i<data.length;i++){
+						str+='<div class="select-file" title="'+data[i]+'">'+data[i]+'</div>';
+					}
+
+					$("#selFileList").html(str);
+					$("#fileInfo").html("共有 <span style='color:green;'>"+data.length+"</span> 个图片文件");
+				}
+			}
+		}
+	}
+
+
+</script>

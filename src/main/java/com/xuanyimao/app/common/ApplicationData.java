@@ -11,18 +11,12 @@ import com.xuanyimao.app.entity.js2java.JsFunctionAO;
 import com.xuanyimao.app.entity.js2java.JsFunctionParam;
 import com.xuanyimao.app.util.LogUtil;
 import okhttp3.ConnectionPool;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.reflections.Reflections;
-import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
-import org.springframework.core.ParameterNameDiscoverer;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -107,7 +101,7 @@ public class ApplicationData {
 				JsClassAO jsClassAO=new JsClassAO(c, c.getDeclaredConstructor().newInstance(), className,c.getName(),prefix);
 				jsClassAOList.add(jsClassAO);
 			}catch (Exception e){
-				LogUtil.getLogger().error("解析 {} 的 @JsClass 注解失败",c,e.getMessage(),e);
+				LogUtil.error("解析 {} 的 @JsClass 注解失败",c,e.getMessage(),e);
 			}
 		}
 		annoData.setAnnoClassList(jsClassAOList);
@@ -144,10 +138,48 @@ public class ApplicationData {
 							}
 						}
 					}catch (Exception e){
-						LogUtil.getLogger().error("解析 {} 的字段 {} 的 @JsObject 注解失败",c,field.getName(),e.getMessage(),e);
+						LogUtil.error("解析 {} 的字段 {} 的 @JsObject 注解失败",c,field.getName(),e.getMessage(),e);
 					}
 				}
 			}
+
+//			Method[] methods=c.getMethods();
+//			if(methods.length>0) {
+//				for(Method method:methods) {
+//					method.setAccessible(true);
+//					try{
+//						JsFunction jsFunction=method.getAnnotation(JsFunction.class);
+//						if(jsFunction!=null) {//方法含有jsFunction注解
+//							JsFunctionAO jsFunctionAO =new JsFunctionAO(method, jsClassAO);
+//							//获取方法的所有参数
+//							Class<?>[] paramClass=method.getParameterTypes();
+//							if(paramClass.length>0) {//存在参数
+//								List<JsFunctionParam> paramList=new ArrayList<JsFunctionParam>();
+//								//使用spring LocalVariableTableParameterNameDiscoverer获取参数名
+//								ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+//								String[] pn=parameterNameDiscoverer.getParameterNames(method);
+//								for(int j=0;j<paramClass.length;j++) {
+////									System.out.println(paramClass[j]+"...."+pn[j]);
+//									paramList.add(new JsFunctionParam(paramClass[j], pn[j]));
+//								}
+//								jsFunctionAO.setMethodParam(paramList);
+//							}
+//
+//							String methodName=jsFunction.name();
+//							if(StringUtils.isBlank(methodName)) {
+//								methodName=method.getName();
+//							}
+//							String funcName=(StringUtils.isNotBlank(jsClassAO.getPrefix())? jsClassAO.getPrefix()+".":"") + methodName;
+////							System.out.println("扫描到的JS函数："+funcName);
+//							jsFunctionAO.setDesc(jsFunction.desc());
+//							methodMap.put(funcName, jsFunctionAO);
+//
+//						}
+//					} catch (Exception e) {
+//						LogUtil.error("解析 {} 的方法 {} 的 @JsFunction 注解失败",c,method.getName(),e.getMessage(),e);
+//					}
+//				}
+//			}
 
 			Method[] methods=c.getMethods();
 			if(methods.length>0) {
@@ -157,19 +189,15 @@ public class ApplicationData {
 						JsFunction jsFunction=method.getAnnotation(JsFunction.class);
 						if(jsFunction!=null) {//方法含有jsFunction注解
 							JsFunctionAO jsFunctionAO =new JsFunctionAO(method, jsClassAO);
-							//获取方法的所有参数
-							Class<?>[] paramClass=method.getParameterTypes();
-							if(paramClass.length>0) {//存在参数
-								List<JsFunctionParam> paramList=new ArrayList<JsFunctionParam>();
-								//使用spring LocalVariableTableParameterNameDiscoverer获取参数名
-								ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
-								String[] pn=parameterNameDiscoverer.getParameterNames(method);
-								for(int j=0;j<paramClass.length;j++) {
-//									System.out.println(paramClass[j]+"...."+pn[j]);
-									paramList.add(new JsFunctionParam(paramClass[j], pn[j]));
-								}
-								jsFunctionAO.setMethodParam(paramList);
+
+							//需要maven开启编译时保留参数名
+							List<JsFunctionParam> paramList=new ArrayList<JsFunctionParam>();
+							Parameter[] parameters=method.getParameters();
+							for (Parameter parameter : parameters) {
+								paramList.add(new JsFunctionParam(parameter.getType(), parameter.getName()));
+								System.out.println("获取到的参数名："+parameter.getName()+"  "+parameter.getType());
 							}
+							jsFunctionAO.setMethodParam(paramList);
 
 							String methodName=jsFunction.name();
 							if(StringUtils.isBlank(methodName)) {
@@ -182,7 +210,7 @@ public class ApplicationData {
 
 						}
 					} catch (Exception e) {
-						LogUtil.getLogger().error("解析 {} 的方法 {} 的 @JsFunction 注解失败",c,method.getName(),e.getMessage(),e);
+						LogUtil.error("解析 {} 的方法 {} 的 @JsFunction 注解失败",c,method.getName(),e.getMessage(),e);
 					}
 				}
 			}

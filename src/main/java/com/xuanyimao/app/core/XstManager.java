@@ -6,6 +6,7 @@ import com.xuanyimao.app.common.Constants;
 import com.xuanyimao.app.entity.TabBrowser;
 import com.xuanyimao.app.handler.*;
 import com.xuanyimao.app.listener.TabCloseListener;
+import me.friwi.jcefmaven.impl.step.init.CefInitializer;
 import org.apache.commons.lang3.StringUtils;
 import org.cef.CefApp;
 import org.cef.CefApp.CefAppState;
@@ -23,6 +24,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -60,7 +62,7 @@ public class XstManager {
 	 * @author liuming
 	 * @since 2023年8月18日
 	 */
-	public void initApp() {
+	public void initApp(File jcefBinFolder) throws Exception {
 		this.frame=new MainFrame();
 		this.frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -98,7 +100,10 @@ public class XstManager {
 		/** 远程调试端口，打开开发者工具。用 */
 		settings.remote_debugging_port=1025;
 
-		cefApp=CefApp.getInstance(settings);
+//		cefApp=CefApp.getInstance(settings);
+		//使用 jcefmaven 的方法获取cefApp对象，此方式不用手动添加二进制文件
+		List<String> args=new ArrayList<>();
+		cefApp= CefInitializer.initialize(jcefBinFolder,args,settings);
 		
 		client=cefApp.createClient();
 		//注册handler

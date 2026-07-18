@@ -13,7 +13,7 @@ import org.cef.handler.CefLifeSpanHandlerAdapter;
 import com.xuanyimao.jceftest.TabbedPaneTestFrame;
 
 /**
- * @Description: 监听弹出窗口
+ * 监听弹出窗口
  * @author liuming
  */
 public class LifeSpanHandler extends CefLifeSpanHandlerAdapter {

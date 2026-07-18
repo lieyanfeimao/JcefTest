@@ -18,6 +18,11 @@ import java.util.jar.JarFile;
 
 public class StartupApp {
 
+    /** 开发环境目录 **/
+    public final static String JCEF_DEV_BIN_FOLDER_PATH="bin"+File.separator+"win64";
+    /** windows 上安装后的目录 */
+    public final static String JCEF_WINDOWS_INSTALL_BIN_FOLDER_PATH="app"+File.separator+"win64";
+
     //资源文件路径。以jar包方式运行时，这些目录如果不存在，则会从jar包中解压。
     private final static String[] res=new String[]{"view"};
 
@@ -27,20 +32,28 @@ public class StartupApp {
             copyResources();
         }catch (Throwable e){
             e.printStackTrace();
-            LogUtil.getLogger().error(e.getMessage(),e);
+            LogUtil.error(e.getMessage(),e);
         }
 
 
         ApplicationData.initData();
 
-        //必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
-        if (!CefApp.startup(args)) {
-            LogUtil.getLogger().info("JCEF初始化失败!");
-            return;
+//        //必须在main()方法的开头调用此方法才能执行特定于平台的启动初始化。在Linux上，这将初始化Xlib多线程，而在macOS上，这会动态加载CEF框架。
+//        if (!CefApp.startup(args)) {
+//            LogUtil.info("JCEF初始化失败!");
+//            return;
+//        }
+
+        //用于定位到二进制文件所在目录
+        File binFolder=new File(JCEF_DEV_BIN_FOLDER_PATH);
+        if(!binFolder.exists()){
+            binFolder=new File(JCEF_WINDOWS_INSTALL_BIN_FOLDER_PATH);
         }
 
+        LogUtil.info("软件目录："+System.getProperty("user.dir"));
+        LogUtil.info("二进制文件目录：{}",binFolder.getAbsolutePath());
         //初始化并显示应用窗口
-        XstManager.getInstance().initApp();
+        XstManager.getInstance().initApp(binFolder);
     }
 
     /**
@@ -126,7 +139,7 @@ public class StartupApp {
             FileUtils.forceMkdirParent(new File(destFolder+entry.getName().replace("/",File.separator)));
             //复制资源文件
             copyResourcesFile( entry.getName(),destFolder+entry.getName().replace("/",File.separator));
-            LogUtil.getLogger().info("生成文件: " + entry.getName());
+            LogUtil.info("生成文件: {}",entry.getName());
         }
         jarFile.close();
     }

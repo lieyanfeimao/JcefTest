@@ -16,6 +16,11 @@
 	<br><br>
 	<a href="javascript:testToJava3()">测试与java代码交互(同步的方式-1)</a>
 
+	<div style="color:red;">注意，有些jcef版本使用 alert() 会导致程序闪退，在项目中，尽量避免使用原生的alert、confirm函数，而使用UI框架的弹窗函数，本文章将原来的alert换为了直接输出到页面上 </div>
+
+	<div id="log">
+
+	</div>
 </body>
 <script>
 
@@ -24,9 +29,11 @@ function testToJava(){
 	    request: '发送给JAVA的数据',
 	    persistent:false,
 	    onSuccess: function(response) {
-	      alert("返回的数据:"+response);
+			logPrint("返回的数据:"+response);
 	    },
-	    onFailure: function(error_code, error_message) {}
+	    onFailure: function(error_code, error_message) {
+			//失败处理
+		}
 	});
 }
 
@@ -41,7 +48,9 @@ function execJava(data){
 		    onSuccess: function(response) {
 		    	resolve(response);
 		    },
-		    onFailure: function(error_code, error_message) {}
+		    onFailure: function(error_code, error_message) {
+				//失败处理
+			}
 		});
 	});
 }
@@ -50,22 +59,26 @@ function execJava(data){
  * 此函数需要使用 async 声明
  */
 async function testToJava2(){
-	var data=await execJava("发送给JAVA的数据1");
-	alert(data+"1");
-	var data1=await execJava("发送给JAVA的数据2");
-	alert(data+"2");
+	var data=await execJava("第一个调用，两秒后打印下一个调用的结果");
+	logPrint("返回的数据："+data);
+	data=await execJava("暂停");
+	logPrint("返回的数据："+data);
 }
 
 
 function testToJava3(){
-	execJava("发送给JAVA的数据1")
+	execJava("第一个调用")
 	.then(function(data){
-		alert(data+"1");
-		return execJava("发送给JAVA的数据2");
+		logPrint("返回的数据："+data);
+		return execJava("第二个调用");
 	})
 	.then(function(data){
-		alert(data+"2");
+		logPrint("返回的数据："+data);
 	});
+}
+
+function logPrint(data){
+	document.getElementById("log").innerHTML=document.getElementById("log").innerHTML+data+"<br>";
 }
 </script>
 <!-- author:玄翼猫 -->

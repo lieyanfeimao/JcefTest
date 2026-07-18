@@ -94,7 +94,7 @@ public class ThumbnailService {
                         .toFile(destFile); // 保存到文件
             }
         } catch (Exception | Error e) {
-            LogUtil.getLogger().error("生成缩略图失败:{} -> {}",srcFile.getAbsolutePath(),destFile.getAbsolutePath(),e);
+            LogUtil.error("生成缩略图失败:{} -> {}",srcFile.getAbsolutePath(),destFile.getAbsolutePath(),e);
         }
     }
 

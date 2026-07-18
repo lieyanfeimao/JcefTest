@@ -33,7 +33,7 @@ public class ImageToIcoController {
             ImageToIcoUtil.convertToIco(path,savePath);
             return Message.success();
         } catch (Exception e) {
-            LogUtil.getLogger().error("生成ico图标失败：{}",e.getMessage(),e);
+            LogUtil.error("生成ico图标失败：{}",e.getMessage(),e);
             return Message.error("生成ico图标失败："+e.getMessage());
         }
     }

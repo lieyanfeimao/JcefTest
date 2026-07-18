@@ -39,7 +39,7 @@ public class ThumbnailController {
             }
             return Message.success("操作成功",thumbnailService.queryAllImageFile(folderFile));
         } catch (Exception e) {
-            LogUtil.getLogger().error("获取目录下所有图片文件失败：{}",e.getMessage(),e);
+            LogUtil.error("获取目录下所有图片文件失败：{}",e.getMessage(),e);
             return Message.error("获取目录下所有图片文件失败："+e.getMessage());
         }
     }
@@ -85,7 +85,7 @@ public class ThumbnailController {
             thumbnailService.create(folderFile,saveFolderFile,keepAspectRatio,width,height);
             return Message.success();
         } catch (Exception e) {
-            LogUtil.getLogger().error("生成缩略图失败：{}",e.getMessage(),e);
+            LogUtil.error("生成缩略图失败：{}",e.getMessage(),e);
             return Message.error("生成缩略图失败："+e.getMessage());
         }
     }

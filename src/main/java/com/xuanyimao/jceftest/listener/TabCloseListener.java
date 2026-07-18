@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 import com.xuanyimao.jceftest.TabbedPaneTestFrame;
 
 /**
- * @Description: tab关闭事件监听器
+ * tab关闭事件监听器
  * @author liuming
  */
 public class TabCloseListener implements MouseListener{

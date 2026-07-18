@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: http://www.xuanyimao.com/sitemap.xml.gz

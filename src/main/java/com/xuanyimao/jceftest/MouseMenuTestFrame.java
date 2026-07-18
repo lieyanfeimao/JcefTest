@@ -28,7 +28,7 @@ import org.cef.handler.CefMessageRouterHandler;
 import com.xuanyimao.jceftest.handler.MenuHandler;
 
 /**
- * @Description:鼠标右键菜单
+ * 鼠标右键菜单
  * @author liuming
  */
 public class MouseMenuTestFrame extends JFrame{

@@ -38,7 +38,7 @@ public class XstDisplayHandler extends CefDisplayHandlerAdapter {
 
 	@Override
 	public boolean onConsoleMessage(CefBrowser browser, CefSettings.LogSeverity level, String message, String source, int line) {
-		LogUtil.getLogger().info(source+":[行号:"+line+"]["+level + "]: " + message);
+		LogUtil.info(source+":[行号:"+line+"]["+level + "]: " + message);
 		return super.onConsoleMessage(browser, level, message, source, line);
 	}
 }

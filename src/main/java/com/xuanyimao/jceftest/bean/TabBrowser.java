@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import org.cef.browser.CefBrowser;
 
 /**
- * @Description:保存tab关联的对象
+ * 保存tab关联的对象
  * @author liuming
  */
 public class TabBrowser {

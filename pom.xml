@@ -13,7 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <jcefmaven.version>143.0.14</jcefmaven.version>
+        <jcefmaven.version>146.0.10</jcefmaven.version>
         <zip4j.version>2.11.5</zip4j.version>
         <spring-core.version>4.1.0.RELEASE</spring-core.version>
 
@@ -26,9 +26,20 @@
         <reflections.version>0.9.11</reflections.version>
 
         <thumbnailator.version>0.4.21</thumbnailator.version>
+
+        <jupiter.version>6.1.1</jupiter.version>
     </properties>
 
     <dependencies>
+
+        <!-- JUnit，用于 test 模块下的代码测试 -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- jcef jar包 -->
         <dependency>
             <groupId>me.friwi</groupId>
@@ -38,12 +49,12 @@
 
         <!-- 这些包在com.xuanyimao.app下用到 -->
 
-        <!-- 用于反射获取方法变量名 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${spring-core.version}</version>
-        </dependency>
+<!--        &lt;!&ndash; 用于反射获取方法变量名 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework</groupId>-->
+<!--            <artifactId>spring-core</artifactId>-->
+<!--            <version>${spring-core.version}</version>-->
+<!--        </dependency>-->
 
         <!-- 用于文件压缩和解压 -->
         <dependency>

@@ -26,7 +26,7 @@ import org.cef.handler.CefMessageRouterHandler;
 
 
 /**
- * @Description:Js与Java代码交互测试
+ * Js与Java代码交互测试
  * @author liuming
  */
 public class JsTestFrame extends JFrame{
@@ -122,8 +122,17 @@ public class JsTestFrame extends JFrame{
 			public boolean onQuery(CefBrowser browser, CefFrame frame, long query_id, String request, boolean persistent,
 					CefQueryCallback callback) {
 				System.out.println("request:"+request+"\nquery_id:"+query_id+"\npersistent:"+persistent);
-				
-				callback.success("Java后台处理了数据!请观察控制台打印信息以测试!");
+
+				//如果传的字符串是 暂停 ，休眠2秒
+				if("暂停".equals(request)){
+                    try {
+                        Thread.sleep(2000L);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+				callback.success("Java后台处理了数据!这是您传给JAVA后台的数据："+request);
 				return true;
 			}
 		}, true);

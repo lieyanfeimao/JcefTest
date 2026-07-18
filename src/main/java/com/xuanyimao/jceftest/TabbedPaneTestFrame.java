@@ -29,7 +29,7 @@ import com.xuanyimao.jceftest.handler.MenuHandler;
 import com.xuanyimao.jceftest.listener.TabCloseListener;
 
 /**
- * @Description:以tab栏形式显示浏览器窗口
+ * 以tab栏形式显示浏览器窗口
  * @author liuming
  */
 public class TabbedPaneTestFrame extends JFrame{

@@ -12,7 +12,7 @@ import org.cef.handler.CefDisplayHandlerAdapter;
 import com.xuanyimao.jceftest.TabbedPaneTestFrame;
 
 /**
- * @Description:用于更新tab标题
+ * 用于更新tab标题
  * @author liuming
  */
 public class DisplayHandler extends CefDisplayHandlerAdapter {
