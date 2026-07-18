@@ -2,7 +2,12 @@
 
 > 使用的jcef版本：146.0.10  
 > 本工程包含 JAVA与JS交互，鼠标右键菜单，以Tab形式展示浏览器、png转ico、图片缩放。在jdk14以上版本，可以使用 打包exe.bat/CreateWindowsInstallPkg类 生成exe安装包  
-> 个人修正的JCEF的API文档(中英文双语):  https://pan.baidu.com/s/18eioiDbIPM5aDdyn0TatVA  提取码: aptd 。如果您有修正此文档的需求，可以移步我的文档翻译项目(也是使用jcef开发)： https://github.com/lieyanfeimao/xym-translate-jcef1 (github)或者 https://gitee.com/edadmin/xym-translate-jcef1.git (码云)  
+> 
+> **个人修正的JCEF的API文档(中英文双语)**:  
+>    百度云盘：https://pan.baidu.com/s/18eioiDbIPM5aDdyn0TatVA  提取码: aptd 。  
+>    微云： https://share.weiyun.com/AFOf0Tsb   
+> 
+> 如果您有修正此文档的需求，可以移步我的文档翻译项目(也是使用jcef开发)： https://github.com/lieyanfeimao/xym-translate-jcef1 (github)或者 https://gitee.com/edadmin/xym-translate-jcef1.git (码云)  
 > 关于jcef的一些教程，可以参考我的csdn： https://blog.csdn.net/xymmwap/category_9374584.html   
 
 > 关于本项目存在的问题不要发在这里，我一年难得看一次。其他的问题我一般也解决不了，请去Jcef的论坛求助： https://magpcss.org/ceforum/viewforum.php?f=17 。老外通常还是挺热心的  
